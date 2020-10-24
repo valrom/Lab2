@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:\\msys64\\mingw64\\bin\\python.exe",
+    "files.associations": {
+        "ostream": "cpp"
+    }
+}
