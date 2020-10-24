@@ -65,8 +65,9 @@ int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    if(rank == 0){
-        time0 = MPI_Wtime();
+    time0 = MPI_Wtime();
+
+    if( rank == 0 ) {
 
         MPI_Send_init(T0, N, MPI_FLOAT, 1, 1, MPI_COMM_WORLD,&requests[0]);//отправка A-E процессу 1
         MPI_Send_init(T0, N, MPI_FLOAT, 2, 1, MPI_COMM_WORLD,&requests[1]);//отправка A-E процессу 2
@@ -108,13 +109,7 @@ int main(int argc, char **argv) {
         MPI_Wait(&requests[5],&statuses[0]);
         MPI_Wait(&requests[6],&statuses[0]);
 
-        time1 = MPI_Wtime();
-
-        cout<<"Thread "<<rank<<" with runtime "<<time1-time0<<endl;
-    }
-
-    else if(rank == 1){
-        time0 = MPI_Wtime();
+    } else if(rank == 1){
 
         MPI_Recv_init(T1, N, MPI_FLOAT, 0, 1, MPI_COMM_WORLD, &requests[0]);//получить в T1 A-E от процесса 0
 
@@ -147,13 +142,8 @@ int main(int argc, char **argv) {
         MPI_Start(&requests[4]);//отправка Y2 процессу 0
         MPI_Wait(&requests[4],&statuses[0]);//ожидание отправки Y2 процессу 0
 
-        time1 = MPI_Wtime();
-
-        cout<<"Thread "<<rank<<" with runtime "<<time1-time0<<endl;
-    }
-
-    else if(rank == 2){
-        time0 = MPI_Wtime();
+    } else if (rank == 2) {
+ 
 
         MPI_Recv_init(T1, N, MPI_FLOAT, 0, 1, MPI_COMM_WORLD, &requests[0]);//получить в T1 A-E от процесса 0
 
@@ -189,13 +179,7 @@ int main(int argc, char **argv) {
         MPI_Start(&requests[4]);//отправка Y3 процессу 0
         MPI_Wait(&requests[4],&statuses[0]);
 
-        time1 = MPI_Wtime();
-
-        cout<<"Thread "<<rank<<" with runtime "<<time1-time0<<endl;
-    }
-
-    else if(rank == 3){
-        time0 = MPI_Wtime();
+    } else if ( rank == 3) {
 
         MPI_Send_init(T1, N, MPI_FLOAT, 2, 1, MPI_COMM_WORLD,&requests[0]);//отправка B*D*[B*D-E-G]*[B*D-E]^2  процессу 2
 
@@ -209,10 +193,10 @@ int main(int argc, char **argv) {
         MPI_Start(&requests[0]);
         MPI_Wait(&requests[0],&statuses[0]);
 
-        time1 = MPI_Wtime();
-
-        cout<<"Thread "<<rank<<" with runtime "<<time1-time0<<endl;
     }
+
+    time1 = MPI_Wtime();
+    cout << "Thread " << rank << " with runtime " << time1 - time0 << endl;
 
     MPI_Finalize();
 
